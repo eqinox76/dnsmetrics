@@ -53,7 +53,7 @@ func main() {
 
 func measure(vec *prometheus.SummaryVec, target string) {
 	client := dns.Client{
-		ReadTimeout: time.Duration(time.Minute),
+		Timeout: time.Duration(time.Minute),
 	}
 	for {
 		var msg dns.Msg
@@ -65,6 +65,7 @@ func measure(vec *prometheus.SummaryVec, target string) {
 
 		success := "true"
 		if err != nil {
+			log.Println(target, err.Error())
 			success = "false"
 		}
 		vec.WithLabelValues(target, success).Observe(rtt.Seconds())
